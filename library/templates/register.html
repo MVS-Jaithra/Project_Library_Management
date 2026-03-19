@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LibraVault — Register</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink:#1a1207; --parch:#f5f0e8; --cream:#faf7f2;
+      --amber:#c8772a; --amber2:#e8943a; --sage:#4a6741;
+      --muted:#8a7f70; --border:#ddd5c5;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin:0; padding:0; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: var(--ink);
+    }
+    .hero {
+      background: var(--ink);
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 4rem;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: -80px; left: -80px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(74,103,65,.25) 0%, transparent 70%);
+    }
+    .hero-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem; font-weight: 700;
+      color: var(--parch); line-height: 1.1; margin-bottom: 1.2rem;
+    }
+    .hero-logo span { color: var(--amber); }
+    .hero-sub { color: rgba(245,240,232,.5); font-size:.97rem; font-weight:300; max-width:280px; line-height:1.7; }
+    .panel {
+      background: var(--cream);
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 4rem;
+    }
+    .panel-header { margin-bottom: 1.8rem; }
+    .panel-header h2 { font-family:'Playfair Display',serif; font-size:1.9rem; color:var(--ink); margin-bottom:.3rem; }
+    .panel-header p { color:var(--muted); font-size:.9rem; }
+    .form-group { margin-bottom: 1.1rem; }
+    .form-group label { display:block; font-size:.82rem; font-weight:600; color:#5a5040; margin-bottom:.4rem; letter-spacing:.4px; text-transform:uppercase; }
+    .form-group input, .form-group select {
+      width:100%; padding:.7rem 1rem; border:1.5px solid var(--border);
+      border-radius:9px; font-size:.93rem; font-family:'DM Sans',sans-serif;
+      background:#fff; color:var(--ink); outline:none; transition:border-color .2s, box-shadow .2s;
+    }
+    .form-group input:focus, .form-group select:focus { border-color:var(--amber); box-shadow:0 0 0 3px rgba(200,119,42,.12); }
+    .role-grid { display:grid; grid-template-columns:1fr 1fr; gap:.6rem; margin-bottom:1.3rem; }
+    .role-card {
+      border:1.5px solid var(--border); border-radius:10px; padding:.85rem 1rem;
+      cursor:pointer; display:flex; align-items:center; gap:.7rem;
+      transition:all .2s; background:#fff;
+    }
+    .role-card:hover { border-color:var(--amber); }
+    .role-card.selected { border-color:var(--amber); background:#fff8ed; }
+    .role-card input[type=radio] { display:none; }
+    .role-icon { font-size:1.4rem; }
+    .role-label { font-size:.87rem; font-weight:600; color:var(--ink); }
+    .role-desc { font-size:.75rem; color:var(--muted); }
+    .btn-submit {
+      width:100%; padding:.8rem; background:var(--sage); color:#fff;
+      border:none; border-radius:10px; font-family:'DM Sans',sans-serif;
+      font-size:.95rem; font-weight:700; cursor:pointer; margin-top:.5rem;
+      transition:background .2s; letter-spacing:.3px;
+    }
+    .btn-submit:hover { background:#3d5836; }
+    .switch-link { text-align:center; margin-top:1.3rem; font-size:.87rem; color:var(--muted); }
+    .switch-link a { color:var(--amber); font-weight:600; text-decoration:none; }
+    .switch-link a:hover { text-decoration:underline; }
+    .flash {
+      background:#fff4e5; border-left:4px solid var(--amber);
+      padding:.65rem 1rem; border-radius:8px; font-size:.87rem;
+      color:var(--ink); margin-bottom:1rem; animation:slideIn .3s ease;
+    }
+    @keyframes slideIn { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:none} }
+    @media (max-width:768px) { body{grid-template-columns:1fr} .hero{display:none} .panel{padding:2.5rem 1.8rem} }
+  </style>
+</head>
+<body>
+<div class="hero">
+  <div class="hero-logo">Libra<span>Vault</span></div>
+  <p class="hero-sub">Create your account and join the LibraVault community today.</p>
+</div>
+<div class="panel">
+  <div class="panel-header">
+    <h2>Create Account</h2>
+    <p>Register to get started</p>
+  </div>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for msg in messages %}
+        <div class="flash">{{ msg }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+  <form method="POST" action="/register">
+    <p style="font-size:.82rem;font-weight:600;color:#5a5040;text-transform:uppercase;letter-spacing:.4px;margin-bottom:.6rem;">Register As</p>
+    <div class="role-grid">
+      <label class="role-card" id="card-student">
+        <input type="radio" name="role" value="student" required>
+        <div class="role-icon">🎓</div>
+        <div>
+          <div class="role-label">Student</div>
+          <div class="role-desc">Browse &amp; search books</div>
+        </div>
+      </label>
+      <label class="role-card" id="card-staff">
+        <input type="radio" name="role" value="staff" required>
+        <div class="role-icon">📚</div>
+        <div>
+          <div class="role-label">Staff</div>
+          <div class="role-desc">Manage library</div>
+        </div>
+      </label>
+    </div>
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" name="username" placeholder="Choose a username" required>
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" name="password" placeholder="Choose a password" required>
+    </div>
+    <button type="submit" class="btn-submit">Create Account →</button>
+  </form>
+  <p class="switch-link">Already have an account? <a href="/">Sign in</a></p>
+</div>
+<script>
+  document.querySelectorAll('.role-card input[type=radio]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+      radio.closest('.role-card').classList.add('selected');
+    });
+  });
+</script>
+</body>
+</html>

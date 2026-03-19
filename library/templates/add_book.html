@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Edit' if edit else 'Add' }} Book — LibraVault{% endblock %}
+
+{% block navbar %}
+<nav class="navbar">
+  <a class="navbar-brand" href="/staff/dashboard">📖 Libra<span>Vault</span></a>
+  <div class="navbar-links">
+    <span class="badge-role" style="background:var(--amber);color:var(--ink);">Staff</span>
+    <a href="/staff/dashboard">Dashboard</a>
+    <a href="/staff/books">All Books</a>
+    <a href="/logout" class="btn-logout">Logout</a>
+  </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="page">
+  <div class="page-header">
+    <h1>{{ '✏️ Edit Book' if edit else '➕ Add New Book' }}</h1>
+    <p>{{ 'Update book details in the database.' if edit else 'Fill in the details to add a new book to the library.' }}</p>
+  </div>
+
+  <div style="max-width: 560px;">
+    <div class="card">
+      <form method="POST" action="{{ '/staff/edit_book/' + book.book_id|string if edit else '/staff/add_book' }}">
+        <div class="form-group">
+          <label>Book Title</label>
+          <input type="text" name="title" value="{{ book.title if edit else '' }}"
+                 placeholder="e.g. The Great Gatsby" required>
+        </div>
+        <div class="form-group">
+          <label>Author</label>
+          <input type="text" name="author" value="{{ book.author if edit else '' }}"
+                 placeholder="e.g. F. Scott Fitzgerald" required>
+        </div>
+        <div class="form-group">
+          <label>Quantity</label>
+          <input type="number" name="quantity" value="{{ book.quantity if edit else '1' }}"
+                 min="0" placeholder="e.g. 5" required>
+        </div>
+        <div style="display:flex;gap:.8rem;margin-top:1.5rem;">
+          <button type="submit" class="btn btn-primary" style="flex:1;justify-content:center;padding:.7rem;">
+            {{ '💾 Save Changes' if edit else '➕ Add Book' }}
+          </button>
+          <a href="/staff/books" class="btn btn-outline" style="padding:.7rem 1.2rem;">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

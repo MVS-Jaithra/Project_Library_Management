@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Staff Dashboard — LibraVault{% endblock %}
+
+{% block navbar %}
+<nav class="navbar">
+  <a class="navbar-brand" href="/staff/dashboard">📖 Libra<span>Vault</span></a>
+  <div class="navbar-links">
+    <span class="badge-role" style="background:var(--amber);color:var(--ink);">Staff</span>
+    <a href="/staff/books">All Books</a>
+    <a href="/staff/add_book">Add Book</a>
+    <span style="color:#666">| {{ user }}</span>
+    <a href="/logout" class="btn-logout">Logout</a>
+  </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="page">
+  <div class="page-header">
+    <h1>Staff Dashboard</h1>
+    <p>Manage the library collection, add new books, and keep records up to date.</p>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon" style="background:#fff8ed; font-size:1.6rem;">📚</div>
+      <div>
+        <div class="stat-label">Total Titles</div>
+        <div class="stat-value">{{ stats.total }}</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:#eef6ee; font-size:1.6rem;">➕</div>
+      <div>
+        <div class="stat-label">Quick Action</div>
+        <div class="stat-value" style="font-size:1rem;margin-top:.3rem;">
+          <a href="/staff/add_book" class="btn btn-sage" style="font-size:.85rem;padding:.4rem .9rem;">Add Book</a>
+        </div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:#fef0ee; font-size:1.6rem;">🗂️</div>
+      <div>
+        <div class="stat-label">Manage</div>
+        <div class="stat-value" style="font-size:1rem;margin-top:.3rem;">
+          <a href="/staff/books" class="btn btn-outline" style="font-size:.85rem;padding:.4rem .9rem;">View All</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-top:1.5rem;">
+    <div class="card" style="text-align:center; padding:2.5rem 1.5rem;">
+      <div style="font-size:2.5rem;margin-bottom:.8rem;">➕</div>
+      <h3 style="margin-bottom:.5rem;">Add New Book</h3>
+      <p style="color:var(--muted);font-size:.9rem;margin-bottom:1.3rem;">Add a new title to the library catalogue</p>
+      <a href="/staff/add_book" class="btn btn-primary">Add Book</a>
+    </div>
+    <div class="card" style="text-align:center; padding:2.5rem 1.5rem;">
+      <div style="font-size:2.5rem;margin-bottom:.8rem;">📋</div>
+      <h3 style="margin-bottom:.5rem;">Manage Collection</h3>
+      <p style="color:var(--muted);font-size:.9rem;margin-bottom:1.3rem;">View, edit, and delete books from the database</p>
+      <a href="/staff/books" class="btn btn-sage">View Books</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

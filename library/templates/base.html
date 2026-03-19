@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}LibraVault{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink:    #1a1207;
+      --parch:  #f5f0e8;
+      --cream:  #faf7f2;
+      --amber:  #c8772a;
+      --amber2: #e8943a;
+      --sage:   #4a6741;
+      --rust:   #9b3d2a;
+      --muted:  #8a7f70;
+      --border: #ddd5c5;
+      --shadow: 0 4px 24px rgba(26,18,7,.10);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+    h1,h2,h3 { font-family: 'Playfair Display', serif; }
+
+    /* ── Navbar ───────────────────────────────── */
+    .navbar {
+      background: var(--ink);
+      padding: 0 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 16px rgba(0,0,0,.3);
+    }
+    .navbar-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      color: var(--parch);
+      text-decoration: none;
+      letter-spacing: .5px;
+      display: flex; align-items: center; gap: .6rem;
+    }
+    .navbar-brand span { color: var(--amber); }
+    .navbar-links { display: flex; align-items: center; gap: 1.5rem; }
+    .navbar-links a {
+      color: #c8bfb0;
+      text-decoration: none;
+      font-size: .9rem;
+      font-weight: 500;
+      padding: .3rem .7rem;
+      border-radius: 4px;
+      transition: all .2s;
+    }
+    .navbar-links a:hover { color: var(--parch); background: rgba(255,255,255,.08); }
+    .navbar-links .btn-logout {
+      background: var(--amber);
+      color: var(--ink);
+      padding: .35rem .9rem;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+    .navbar-links .btn-logout:hover { background: var(--amber2); }
+    .badge-role {
+      background: var(--sage);
+      color: #fff;
+      font-size: .72rem;
+      padding: .2rem .55rem;
+      border-radius: 20px;
+      font-weight: 600;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+
+    /* ── Flash Messages ──────────────────────── */
+    .flash-wrap { padding: 1rem 2.5rem 0; }
+    .flash {
+      padding: .75rem 1.2rem;
+      border-radius: 8px;
+      font-size: .9rem;
+      font-weight: 500;
+      margin-bottom: .5rem;
+      border-left: 4px solid var(--amber);
+      background: #fff8ed;
+      color: var(--ink);
+      animation: slideIn .3s ease;
+    }
+    @keyframes slideIn { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:none; } }
+
+    /* ── Page Container ──────────────────────── */
+    .page { max-width: 1100px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+    .page-header { margin-bottom: 2rem; }
+    .page-header h1 { font-size: 1.9rem; color: var(--ink); }
+    .page-header p { color: var(--muted); margin-top: .3rem; font-size: .95rem; }
+
+    /* ── Cards ───────────────────────────────── */
+    .card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 1.8rem 2rem;
+    }
+
+    /* ── Buttons ─────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: .4rem;
+      padding: .55rem 1.2rem;
+      border-radius: 8px;
+      font-size: .88rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      transition: all .2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .btn-primary { background: var(--amber); color: var(--ink); }
+    .btn-primary:hover { background: var(--amber2); }
+    .btn-danger  { background: var(--rust); color: #fff; }
+    .btn-danger:hover  { background: #b34a35; }
+    .btn-sage    { background: var(--sage); color: #fff; }
+    .btn-sage:hover    { background: #3d5836; }
+    .btn-outline {
+      background: transparent;
+      color: var(--ink);
+      border: 1.5px solid var(--border);
+    }
+    .btn-outline:hover { border-color: var(--amber); color: var(--amber); }
+
+    /* ── Form Inputs ─────────────────────────── */
+    .form-group { margin-bottom: 1.3rem; }
+    .form-group label {
+      display: block;
+      font-size: .85rem;
+      font-weight: 600;
+      margin-bottom: .45rem;
+      color: #4a4035;
+      letter-spacing: .3px;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: .65rem .9rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: .93rem;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      transition: border-color .2s;
+      outline: none;
+    }
+    .form-group input:focus, .form-group select:focus {
+      border-color: var(--amber);
+      background: #fff;
+    }
+
+    /* ── Table ───────────────────────────────── */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    thead tr { background: var(--ink); color: var(--parch); }
+    thead th {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: .82rem;
+      letter-spacing: .6px;
+      text-transform: uppercase;
+      padding: .9rem 1.1rem;
+      text-align: left;
+    }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+    tbody tr:hover { background: #faf6ef; }
+    tbody td { padding: .85rem 1.1rem; font-size: .92rem; }
+    .qty-badge {
+      display: inline-block;
+      background: #eef6ee;
+      color: var(--sage);
+      border-radius: 20px;
+      padding: .15rem .7rem;
+      font-size: .82rem;
+      font-weight: 700;
+    }
+
+    /* ── Search Bar ──────────────────────────── */
+    .search-form {
+      display: flex; gap: .7rem; align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    .search-form input {
+      flex: 1;
+      padding: .6rem 1rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .93rem;
+      background: #fff;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .search-form input:focus { border-color: var(--amber); }
+
+    /* ── Stat Cards ──────────────────────────── */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 1.2rem; margin-bottom: 2rem; }
+    .stat-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex; align-items: center; gap: 1.1rem;
+      box-shadow: var(--shadow);
+    }
+    .stat-icon {
+      width: 52px; height: 52px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+    .stat-card .stat-label { font-size: .8rem; color: var(--muted); font-weight: 500; }
+    .stat-card .stat-value { font-family: 'Playfair Display', serif; font-size: 1.7rem; color: var(--ink); }
+
+    /* ── Empty State ─────────────────────────── */
+    .empty-state {
+      text-align: center; padding: 4rem 2rem; color: var(--muted);
+    }
+    .empty-state .icon { font-size: 3.5rem; margin-bottom: 1rem; }
+    .empty-state p { font-size: 1rem; }
+  </style>
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+{% block navbar %}{% endblock %}
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="flash-wrap">
+      {% for msg in messages %}
+        <div class="flash">{{ msg }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+{% block content %}{% endblock %}
+
+</body>
+</html>

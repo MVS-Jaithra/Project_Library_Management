@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Books — LibraVault{% endblock %}
+
+{% block navbar %}
+<nav class="navbar">
+  <a class="navbar-brand" href="/{{ role }}/dashboard">📖 Libra<span>Vault</span></a>
+  <div class="navbar-links">
+    {% if role == 'staff' %}
+      <span class="badge-role" style="background:var(--amber);color:var(--ink);">Staff</span>
+      <a href="/staff/dashboard">Dashboard</a>
+      <a href="/staff/add_book">Add Book</a>
+    {% else %}
+      <span class="badge-role">Student</span>
+      <a href="/student/dashboard">Dashboard</a>
+    {% endif %}
+    <a href="/logout" class="btn-logout">Logout</a>
+  </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="page">
+  <div class="page-header">
+    <h1>Library Collection</h1>
+    <p>{{ books|length }} book{{ 's' if books|length != 1 else '' }} found{% if query %} for "<strong>{{ query }}</strong>"{% endif %}</p>
+  </div>
+
+  <div class="card">
+    <!-- Search Bar -->
+    <form class="search-form" method="GET" action="/{{ role }}/books">
+      <input type="text" name="q" value="{{ query }}" placeholder="🔍  Search by title or author…">
+      <button type="submit" class="btn btn-primary">Search</button>
+      {% if query %}
+        <a href="/{{ role }}/books" class="btn btn-outline">Clear</a>
+      {% endif %}
+      {% if role == 'staff' %}
+        <a href="/staff/add_book" class="btn btn-sage" style="margin-left:auto;">➕ Add Book</a>
+      {% endif %}
+    </form>
+
+    <!-- Table -->
+    {% if books %}
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Quantity</th>
+            {% if role == 'staff' %}<th>Actions</th>{% endif %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for book in books %}
+          <tr>
+            <td style="color:var(--muted);font-size:.85rem;">{{ book.book_id }}</td>
+            <td>
+              <strong style="font-family:'Playfair Display',serif;">{{ book.title }}</strong>
+            </td>
+            <td style="color:var(--muted);">{{ book.author }}</td>
+            <td>
+              <span class="qty-badge {% if book.quantity == 0 %}qty-zero{% endif %}">
+                {{ book.quantity }}
+              </span>
+            </td>
+            {% if role == 'staff' %}
+            <td>
+              <div style="display:flex;gap:.5rem;">
+                <a href="/staff/edit_book/{{ book.book_id }}" class="btn btn-outline" style="padding:.3rem .75rem;font-size:.8rem;">✏️ Edit</a>
+                <form method="POST" action="/staff/delete_book/{{ book.book_id }}" onsubmit="return confirm('Delete \'{{ book.title }}\'?')">
+                  <button type="submit" class="btn btn-danger" style="padding:.3rem .75rem;font-size:.8rem;">🗑️ Delete</button>
+                </form>
+              </div>
+            </td>
+            {% endif %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <div class="icon">📭</div>
+      <p>No books found{% if query %} matching "{{ query }}"{% endif %}.</p>
+      {% if role == 'staff' %}
+        <a href="/staff/add_book" class="btn btn-primary" style="margin-top:1.2rem;">Add First Book</a>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .qty-zero { background:#feeaea !important; color:var(--rust) !important; }
+</style>
+{% endblock %}
+
