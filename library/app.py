@@ -4,16 +4,16 @@ import hashlib
 import os
 
 app = Flask(__name__)
-app.secret_key = 'library_secret_key_2024'
+app.secret_key = os.environ.get('SECRET_KEY', 'libravault2024')
 
 # ── Database Configuration ──────────────────────────────────────────────────
 DB_CONFIG = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': 'password',   # ← Change this
-    'database': 'library_db'
+    'host':     os.environ.get('MYSQL_HOST',     'hopper.proxy.rlwy.net'),
+    'port': int(os.environ.get('MYSQL_PORT',32157)),
+    'user':     os.environ.get('MYSQL_USER',     'root'),
+    'password': os.environ.get('MYSQL_PASSWORD', 'YwnSPXaHVYYGezCSkwvAKSVshCvOjogr'),
+    'database': os.environ.get('MYSQL_DATABASE', 'railway')  
 }
-
 def get_db():
     return mysql.connector.connect(**DB_CONFIG)
 
@@ -211,4 +211,6 @@ def delete_book(book_id):
 
 if __name__ == '__main__':
     init_db()
-    app.run(debug=True)
+    import os
+port = int(os.environ.get('PORT', 5000))
+app.run(host='0.0.0.0', port=port, debug=False)
