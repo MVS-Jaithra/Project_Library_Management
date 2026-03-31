@@ -1,2 +1,5 @@
 [build]
 root = "library"
+
+[start]
+cmd = "python app.py"
