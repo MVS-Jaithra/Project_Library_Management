@@ -1,8 +1,7 @@
 -- LibraVault Database Schema
 -- Run this in MySQL Workbench or mysql CLI if you prefer manual setup
 
-CREATE DATABASE IF NOT EXISTS library_db;
-USE library_db;
+
 
 CREATE TABLE IF NOT EXISTS students (
     student_id INT AUTO_INCREMENT PRIMARY KEY,
